@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Search</title>
+</head>
+
+<body>
+    <h1>Video Search</h1>
+    <input type="text" id="searchInput" placeholder="Enter search query">
+    <button onclick="searchVideos()">Search</button>
+    <div id="searchResults"></div>
+
+    <script>
+        function searchVideos() {
+            const query = document.getElementById('searchInput').value;
+            fetch(`/search?query=${query}`)
+                .then(response => response.json())
+                .then(data => {
+                    const resultsDiv = document.getElementById('searchResults');
+                    resultsDiv.innerHTML = '';
+                    if (data.videos.length === 0) {
+                        resultsDiv.textContent = 'No videos found.';
+                    } else {
+                        data.videos.forEach(video => {
+                            const videoDiv = document.createElement('div');
+                            videoDiv.textContent = `${video.title} - Duration: ${video.duration} minutes`;
+                            resultsDiv.appendChild(videoDiv);
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
+    </script>
+</body>
+
+</html>
